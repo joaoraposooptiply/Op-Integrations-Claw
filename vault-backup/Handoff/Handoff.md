@@ -1,53 +1,49 @@
 ---
 tags: [handoff, operational]
-updated: 2026-02-24T13:00:00Z
+updated: 2026-02-24T13:15:00Z
 status: green
 ---
 
 # 🔄 Handoff — Current State
 
 ## Updated
-2026-02-24 13:00 GMT — Deep context ingestion in progress.
+2026-02-24 13:15 GMT — ALL 22 Confluence data mapping pages captured.
 
-## Status: 🟢 GREEN
+## Status: 🟢 GREEN — Knowledge base built.
 
 ---
 
 ## Completed This Session
-- ✅ Full vault reset + Confluence replacement structure (28+ files)
+- ✅ Full vault reset + Confluence replacement structure
 - ✅ GitHub repo: Op-Integrations-Claw (scripts, scaffolds, vault backup)
 - ✅ 11 crons configured for autonomous ops
-- ✅ Optiply company/API/architecture researched
-- ✅ Confluence overhead captured (7 pages: Platform Spec, HotGlue Redirect, Escalation, Imports/Exports, Architecture)
-- ✅ Generic ETL Template fully dissected (12K doc in vault)
-- ✅ 25 integrations cataloged with all tap/target/ETL/API/Confluence links
-- ✅ 3 integration deep-dives: WooCommerce, Shopify, Exact Online
+- ✅ Confluence overhead captured (7 pages)
+- ✅ Generic ETL Template fully dissected
+- ✅ **ALL 22 integration deep-dives written to vault**
+- ✅ 25 integrations cataloged with all links
 
-## Active Work — RESUME HERE
-| Task | State | Notes |
-|------|-------|-------|
-| Read remaining Confluence data mapping pages | ⏳ 3/22 done | Next: BOL, Lightspeed, Logic4, Magento, Montapacking... |
-| Read Sherpaan ETL (gold standard) | ⏳ Pending | Approval granted but not yet processed |
-| Read all remaining ETLs | ⏳ Not started | Compare patterns across integrations |
-| Agent team recommendations | ⏳ Not started | After full context absorbed |
+## Integration Docs Complete (22/22)
+WooCommerce, Shopify, Exact Online, Bol.com, BigCommerce, Logic4,
+Lightspeed C, Lightspeed R, Montapacking, Odoo, NetSuite, QLS,
+Amazon Seller, Magento, Zoho Books, Zoho Inventory, EasyEcom,
+Sherpaan, Vendit, Tilroy, BigQuery, MSSQL
 
-## Remaining Confluence Pages to Read (19)
-BOL, BigCommerce, BigQuery, EasyEcom, Lightspeed C, Lightspeed R, Logic4,
-Magento (Warehouse), Magento (Non-Warehouse), Montapacking, MSSQL, NetSuite,
-Odoo, QLS, Sherpaan, Tilroy, Vendit, Zoho Books, Zoho Inventory
+## Still To Do
+| Task | Priority |
+|------|----------|
+| Read Sherpaan ETL in detail (gold standard) | High |
+| Read all 25 ETL notebooks (compare patterns) | Medium |
+| Ingest docs into RAG (KB chunks = 0 still) | High |
+| Study actual tap/target code | Medium |
+| Agent team recommendations | Medium |
+| Amazon Vendor doc (no Confluence page) | Low |
 
 ## Infrastructure
-| Service | Status | Port |
-|---------|--------|------|
-| RAG server | ✅ | 8000 |
-| PostgreSQL | ✅ | 5432 |
-| Dashboard | ✅ | 3001 |
-| OpenClaw gateway | ✅ | 18789 |
-| Knowledge chunks | 0 (awaiting ingest) | — |
-| GitHub repo | ✅ | Op-Integrations-Claw |
-| Obsidian vault | ✅ | /Volumes/Speedy |
-
-## Key Files
-- Generic ETL: `Resources/Generic ETL Template.md`
-- Registry: `Resources/Integration Registry.md`
-- Per-integration: `Projects/Integrations/{Name}.md`
+| Service | Status |
+|---------|--------|
+| RAG server | ✅ (0 chunks — ingest pending) |
+| PostgreSQL | ✅ |
+| Dashboard | ✅ |
+| Gateway | ✅ |
+| GitHub repo | ✅ |
+| Vault | ✅ (50+ files) |
