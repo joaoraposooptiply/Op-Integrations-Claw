@@ -1,0 +1,148 @@
+---
+tags: [integration, project, live, complex]
+integration: Exact Online
+type: ERP
+auth: OAuth2 (token refresh every 10 min)
+status: 🟢 Live
+updated: 2026-02-24
+---
+
+# Exact Online Integration
+
+> Most complex integration. 16+ entity types, bidirectional sync, 30+ config flags.
+
+## Sync Board (all every 30 min)
+| Entity | Direction | Notes |
+|--------|-----------|-------|
+| Products | Exact → OP | From Items + StockPositions + SalesItemPrices |
+| Product Deletions | Exact → OP | |
+| Product Compositions | Exact → OP | From BOM or BillOfMaterialVersions |
+| Suppliers | Exact → OP | From CRM/Accounts |
+| Supplier Deletions | Exact → OP | Set to ignored |
+| Supplier Products | Exact → OP | From SupplierItem + PurchaseItemPrices |
+| Stocks | Exact → OP | CurrentStock - PlanningOut |
+| **Sell Orders** | Exact → OP | From Sales Orders OR Sales Invoices (configurable) |
+| Sell Order Deletions | Exact → OP | Also cancelled (Status=45) |
+| **Buy Orders** | Exact ↔ OP | **Bidirectional** — Optiply creates BOs in Exact too |
+| Buy Order Lines (CRUD) | Exact → OP | Add, change, delete tracked |
+| Assembly Orders | Exact → OP | Optional (use_assembly_orders) |
+| **Production Orders** | Exact ↔ OP | ShopOrders, requires Production module |
+| Receipt Lines | Exact → OP | From GoodsReceiptLines |
+| Returns | Exact → OP | Negative receipt lines |
+| Warehouse Transfers | OP → Exact | Converts BOs to transfers |
+
+## Configuration Flags (30+)
+### Products
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `map_stockLevel` | true | Sync stock from Exact |
+| `map_product_articleCode` | true | Sync SearchCode as articleCode |
+| `use_BOM_to_prodAssembled` | false | Use BOM instead of isMakeItem for assembled |
+| `map_IsPurchaseItem` | true | Use IsPurchaseItem for status/unlimitedStock |
+| `prod_ItemGroupCode_filter` | None | Disable products by ItemGroupCode list |
+| `use_IsOnDemandItem` | false | Disable on-demand products |
+| `assortments` | None | Custom Class_01/02 mapping to status |
+| `use_price_lists` | false | Sync price from specific PriceList |
+| `price_list_code` | None | Which PriceListCode to use |
+| `sync_stock_montapacking` | false | Add Monta WMS stocks |
+| `sync_stock_qls` | false | Add QLS stocks |
+| `stock_warehouse_ids` | "" | Filter warehouses for stock |
+
+### Product Compositions
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `use_bill_of_materials_versions` | false | Use BOM Versions (manufacturing) |
+| `calc_part_quantity` | false | Calculate partQty / composedQty |
+
+### Suppliers
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `map_supplier_mail` | false | Sync supplier email |
+| `sync_leadTime_suppliers` | false | Sync PurchaseLeadDays |
+
+### Supplier Products
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `sync_leadTime_supProducts` | false | Sync PurchaseLeadTime |
+| `useMOQ` | true | Sync MinimumQuantity |
+| `useLOT` | true | Sync PurchaseUnitFactor as lotSize |
+| `useLOT_PurchaseLotSize` | false | Use PurchaseLotSize instead |
+| `map_preferred_supplier` | true | Sync MainSupplier flag |
+| `map_purchase_price` | "default" | Options: default/Product Cost/Purchase Prices/none |
+
+### Sell Orders
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `use_sales_orders` | false | Sync Sales Orders |
+| `use_sales_invoices` | true | Sync Sales Invoices |
+| `pullAllOrders` | true | All statuses or only completed |
+| `use_drop_shipments` | true | Include DropShipment orders |
+| `sync_sell_orders_only` | false | Only sell orders (no products) |
+| `filter_CostCenter_Codes` | None | Exclude lines by CostCenter |
+| `filter_sellOrder_CustomerIDs` | None | Exclude by CustomerID |
+
+### Buy Orders
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `use_assembly_orders` | false | Sync AssemblyOrders as BOs |
+| `map_buyOrders_AmountFC` | false | Use foreign currency amount |
+| `bo_completed_status` | "30","40" | Which statuses = completed |
+| `export_BOLine_price` | false | Send line price to Exact |
+| `export_stock_transfers` | false | Send BOs as warehouse transfers |
+| `stock_transfer_from` | — | Source warehouse for transfers |
+| `stock_transfer_to` | — | Dest warehouse for transfers |
+
+### Global
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `unit_filter` | false | Enable unit conversion |
+| `unit_factors` | null | Conversion factors (e.g., gal→ml×3750) |
+| `use_production_orders` | false | Sync ShopOrders (requires Production module) |
+
+## Product Mapping
+| Optiply | Exact | Notes |
+|---------|-------|-------|
+| remoteId | ID | |
+| name | Description | |
+| skuCode | Code | |
+| articleCode | SearchCode | Configurable |
+| price | SalesItemPrices.Price | Max 9999999.99, else 0 |
+| unlimitedStock | IsPurchaseItem | false → unlimited |
+| stockLevel | CurrentStock - PlanningOut | Warehouse-filterable |
+| status | EndDate/IsMakeItem/IsPurchaseItem/IsOnDemandItem | Complex logic |
+| eanCode | Barcode | |
+| assembled | isMakeItem | Or BOM-based |
+| createdAtRemote | ItemCreatedDate | |
+| stockMeasurementUnit | Converted unit | Only if unit_filter=true |
+
+## Buy Order Export (OP → Exact)
+- ReceiptDate = OrderSyncDateTime + supplier.deliveryTime (in calendar days)
+- If no deliveryTime → next working day
+- Lines sorted by skuCode ascending
+- Creator = user who connected Exact + Optiply
+- PurchaseAgent = supplier's account manager
+
+## Key Complexities
+1. **Sell orders dual source:** Can come from Sales Orders OR Sales Invoices (or both with dedup)
+2. **BOs are bidirectional:** Optiply creates → Exact, Exact creates → Optiply
+3. **Assembly/Production Orders:** Separate paths for inventory assembly vs manufacturing
+4. **Warehouse Transfers:** BOs can be sent as warehouse transfers instead
+5. **Returns:** Mapped as negative receipt lines
+6. **Unit conversion:** Factor-based conversion affects stocks, compositions, lotSizes, MOQ
+7. **lotSize on export:** QuantityInPurchaseUnits = quantity / lotSize
+8. **Receipt lines with lotSize:** quantity = QuantityReceived × lotSize
+9. **Product Compositions circular reference protection:** A→B and B→A blocked by DB constraint
+
+## Related Pages
+- [Buy Orders Common Errors](https://optiply.atlassian.net/wiki/spaces/IN/pages/2429059077)
+- [Unit Factor Conversion](https://optiply.atlassian.net/wiki/spaces/IN/pages/2626846725)
+- [Register New App](https://optiply.atlassian.net/wiki/spaces/IN/pages/3000008719)
+- [Exact FAQs](https://optiply.atlassian.net/wiki/spaces/IN/pages/3220963329)
+- [Revoke Access](https://optiply.atlassian.net/wiki/spaces/IN/pages/3266805763)
+
+## Links
+- Tap: [tap-exact](https://gitlab.com/hotglue/tap-exact)
+- Target: [target-exact](https://github.com/hotgluexyz/target-exact)
+- ETL: `optiply-scripts/import/exact/etl.ipynb`
+- API: [REST API](https://start.exactonline.nl/docs/HlpRestAPIResources.aspx)
+- Confluence: [Data Mapping](https://optiply.atlassian.net/wiki/spaces/IN/pages/2391113740)
