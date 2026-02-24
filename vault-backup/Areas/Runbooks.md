@@ -48,6 +48,15 @@ PGPASSWORD='...' psql -h 127.0.0.1 -U optiply_app -d optiply_ai \
 cd ~/optiply && python3.11 ingest.py --source <file> --integration <name>
 ```
 
+## Vault Backup (to GitHub)
+```bash
+cd ~/optiply-workspace/Op-Integrations-Claw
+rsync -av --delete --exclude='Archive/' --include='*/' --include='*.md' --exclude='*' \
+  "/Volumes/Speedy/Obsidian/Op MindWave/" vault-backup/
+git add -A && git commit -m "backup: vault snapshot $(date +%Y-%m-%d)" && git push
+```
+Run this: at every session end, after major vault changes, or before risky operations.
+
 ## OpenClaw
 
 ### Check Status

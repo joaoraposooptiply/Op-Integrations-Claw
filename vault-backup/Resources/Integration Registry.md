@@ -5,37 +5,48 @@ updated: 2026-02-24
 
 # Integration Registry
 
-> Master list of all known integrations. Links to per-integration project pages.
-> See [[_Projects MOC]] for detailed status tracking.
+> Master list from Confluence IN space. Canonical source of truth for all integrations.
 
-## All Known Integrations
+## All Integrations (from Confluence IN space)
 
-| # | Integration | Type | Standard | Status |
-|---|-------------|------|----------|--------|
-| 1 | Shopify | E-commerce | ✅ | ⚪ |
-| 2 | WooCommerce | E-commerce | ✅ | ⚪ |
-| 3 | Magento 2 | E-commerce | ✅ | ⚪ |
-| 4 | Shopware | E-commerce | ✅ | ⚪ |
-| 5 | BigCommerce | E-commerce | | ⚪ |
-| 6 | Lightspeed | E-commerce/POS | ✅ | ⚪ |
-| 7 | Exact Online | ERP | ✅ | ⚪ |
-| 8 | Logic4 | ERP | ✅ | ⚪ |
-| 9 | Picqer | WMS | ✅ | ⚪ |
-| 10 | Picqer Fulfilment | WMS | | ⚪ |
-| 11 | Bol.com | Marketplace | | ⚪ |
-| 12 | Amazon | Marketplace | | ⚪ |
-| 13 | Microsoft Dynamics 365 | ERP | | ⚪ |
-| 14 | SAP | ERP | | ⚪ |
-| 15 | NetSuite | ERP | | ⚪ |
-| 16 | Odoo | ERP | | ⚪ |
-| 17 | Zoho Inventory | ERP | | ⚪ |
-| 18 | Zoho Books | ERP | | ⚪ |
-| 19 | Montapacking | WMS/Fulfillment | | ⚪ |
-| 20 | ChannelDock | Multi-channel | | ⚪ |
-| 21 | ProductFlow | PIM | | ⚪ |
-| 22 | BigQuery | Data | | ⚪ |
-| 23 | MSSQL | Data | | ⚪ |
+| # | Integration | Type | Confluence Page | Status |
+|---|-------------|------|-----------------|--------|
+| 1 | Shopify | E-commerce | IN/Shopify | ⚪ |
+| 2 | WooCommerce | E-commerce | IN/Woocommerce | ⚪ |
+| 3 | Magento | E-commerce | IN/Magento on Hotglue | ⚪ |
+| 4 | BigCommerce | E-commerce | IN/Bigcommerce | ⚪ |
+| 5 | Lightspeed C-Series | E-commerce/POS | IN/Lightspeed on Hotglue | ⚪ |
+| 6 | Exact Online | ERP | IN/Exact Online on Hotglue | ⚪ |
+| 7 | Logic4 | ERP | IN/Logic4 | ⚪ |
+| 8 | Odoo | ERP | IN/Odoo | ⚪ |
+| 9 | Zoho | ERP | IN/Zoho on Hotglue | ⚪ |
+| 10 | NetSuite | ERP | IN/NetSuite | ⚪ |
+| 11 | MS Dynamics Business Central | ERP | IN/Microsoft Dynamics Business Central | ⚪ |
+| 12 | Picqer | WMS | IN/Picqer Integration | ⚪ |
+| 13 | Montapacking | WMS/Fulfillment | IN/Montapacking Hotglue | ⚪ |
+| 14 | Ongoing WMS | WMS | IN/Ongoing WMS on Hotglue | ⚪ |
+| 15 | BOL | Marketplace | IN/BOL on Hotglue | ⚪ |
+| 16 | Amazon | Marketplace | IN/Amazon | ⚪ |
+| 17 | ChannelDock | Multi-channel | IN/ChannelDock | ⚪ |
+| 18 | EasyEcom | E-commerce | IN/EasyEcom | ⚪ |
+| 19 | Sherpaan | Logistics | IN/Sherpaan | ⚪ |
+| 20 | Tilroy | Retail/POS | IN/Tilroy | ⚪ |
+| 21 | Vendit | Retail/POS | IN/Vendit | ⚪ |
+| 22 | QLS | Logistics | IN/QLS | ⚪ |
+| 23 | BigQuery | Data | IN/BigQuery | ⚪ |
+| 24 | MS SQL | Data | IN/MS SQL | ⚪ |
+| 25 | AWS Redshift | Data | IN/AWS Redshift | ⚪ |
+| 26 | SFTP | Data | IN/SFTP | ⚪ |
 
-## Legend
-- ✅ Standard = included at no extra fee
-- ⚪ Not Started / 🔵 Research / 🟡 In Progress / 🟢 Live / 🔴 Broken
+## Also in Confluence (overhead)
+- Generic Data Mapping — IN/Generic Data Mapping
+- Functional Requirement of Integration (Generic) — IN page
+- Schema for Cloud systems (BigQuery, AWS, Azure) — IN page
+- How To guides — IN/How To
+
+## Status Legend
+⚪ Not Started | 🔵 Research | 🟡 In Progress | 🟢 Live | 🔴 Broken
+
+## Confluence Links
+- IN space: https://optiply.atlassian.net/wiki/spaces/IN/overview
+- Hotglue Integrations: https://optiply.atlassian.net/wiki/spaces/IN/pages/2257223800/Hotglue+Integrations
