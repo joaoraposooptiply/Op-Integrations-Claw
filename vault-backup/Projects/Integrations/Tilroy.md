@@ -85,6 +85,30 @@ Pagination: `X-Paging-CurrentPage` / `X-Paging-PageCount` headers. Default count
 - Integer fields preserved (no .0 floats)
 - Nested objects flattened or stringified
 
+## Target Reference
+
+> Writing data FROM Optiply TO Tilroy
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-tilroy](https://github.com/joaoraposooptiply/target-tilroy.git) ⚠️ untested |
+| **Auth Method** | Custom header — `Tilroy-Api-Key` |
+| **Base URL** | `https://api.tilroy.com` |
+
+### Sinks/Entities
+
+| Sink | Endpoint | HTTP Method |
+|------|----------|-------------|
+| PurchaseOrderSink | `/purchaseapi/production/import/purchaseorders` | POST |
+
+### Error Handling
+- Relies on base `HotglueSink` error handling
+
+### Quirks
+- Requires `warehouse_id` in config
+- Payload structure: `orderDate`, `requestedDeliveryDate`, `supplierReference`, `lines[]`
+- Line items contain nested `sku.tilroyId`, `qty.ordered`, `warehouse.number`
+
 ---
 
 ## ETL Summary

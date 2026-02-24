@@ -83,6 +83,31 @@ Detail variants: each endpoint has a corresponding `/.../...` detail endpoint (e
 - NA/empty string replacement
 - Domain-based URL selection
 
+## Target Reference
+
+> Writing data FROM Optiply TO Zoho Inventory
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-zoho-inventory](https://github.com/hotgluexyz/target-zoho-inventory) |
+| **Auth Method** | OAuth2 — `client_id`, `client_secret`, `refresh_token` |
+| **Base URL** | `https://inventory.zoho.com/api/v1` (Zoho OAuth) |
+
+### Sinks/Entities
+
+| Sink | Endpoint | HTTP Method |
+|------|----------|-------------|
+| PurchaseOrderSink | `purchaseorders` | POST |
+| BuyOrderSink | `purchaseorders` | POST |
+| AssemblyOrderSink | `assemblyorders` | POST |
+
+### Error Handling
+- Base `HotglueSink`
+
+### Quirks
+- Two sinks map to same endpoint (`purchaseorders`)
+- Uses Zoho's OAuth2 flow with refresh tokens
+
 ---
 
 ## ETL Summary

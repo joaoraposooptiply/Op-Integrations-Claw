@@ -16,25 +16,33 @@ updated: 2026-02-24
 | Imports | File import architecture | ✅ → Imports and Exports.md |
 | Exports | File export architecture | ✅ → Imports and Exports.md |
 | Architecture | Parent page + PDF attachment | ✅ → Optiply Architecture.md |
+| Auth0 | Authentication setup | ❌ Empty page (5 bytes) |
 | Infrastructure | Parent page (empty, sub-pages for Postgres/Kafka/etc) | Noted |
-| Auth0 | Authentication setup | ❌ Not yet captured |
-| R BigQuery Schema Requirements | BQ schema for R analytics | ❌ Not yet captured |
-| Account Invites - Diagram Overview | User invite flow | ❌ Not yet captured |
-| Purchase Page V2 - Backend | Purchase order backend | ❌ Low priority |
-| Optiply SOA Overview | Service-oriented architecture | ❌ Sub-page of Architecture |
-| Event driven services per bounded context | Kafka bounded contexts | ❌ Sub-page |
-| Data streaming | Streaming architecture | ❌ Sub-page |
 
 ## IN Space (Integrations)
 | Page | Content | Captured? |
 |------|---------|-----------|
 | Hotglue - Main concepts and how it works | ETL overview | ✅ → HotGlue Architecture.md |
-| Hotglue Webhook receiver | Webhook handling | ❌ Not yet |
-| Connect New Tenant | Tenant onboarding | ❌ Not yet |
-| Generic Data Mapping | Shared mapping patterns | ❌ Not yet |
-| Functional Requirement of Integration (Generic) | Generic integration reqs | ❌ Not yet |
-| Schema for Cloud systems | BigQuery/AWS/Azure schemas | ❌ Not yet |
-| 26 integration-specific pages | Per-integration docs | ❌ Will capture when Jay provides links |
+| Hotglue Webhook receiver | Webhook handling | ✅ → Webhook Receiver.md |
+| Connect New Tenant | Tenant onboarding | ✅ → Connect New Tenant.md |
+| Generic Data Mapping | Master entity schema | ✅ → Generic Data Mapping.md |
+| Functional Requirement of Integration (Generic) | Integration checklist | ✅ → Functional Requirements.md |
+| Schema for Cloud systems (BigQuery, AWS, Azure) | Cloud schemas | ✅ → Cloud System Schema.md |
+| Snapshot Construction Queries | SQL for snapshot CSVs | ✅ → Snapshot Queries.md |
+| 22 integration data mapping pages | Per-integration docs | ✅ → Projects/Integrations/*.md |
+
+### Empty/Placeholder Pages (no content)
+| Page | Status |
+|------|--------|
+| ChannelDock | ❌ Empty (0 bytes) |
+| Ongoing WMS | ❌ Empty (0 bytes) |
+| SFTP | ❌ Empty (0 bytes) |
+| Microsoft Dynamics Business Central | ❌ Empty (0 bytes) |
+| Auth0 | ❌ Empty (5 bytes) |
+| AWS Redshift | ⚠️ Stub (399 bytes — just a note about dev docs) |
+| New Hotglue Integrations | ❌ Empty (5 bytes) |
+| How To on Hotglue | ❌ Empty (5 bytes) |
+| Integrations Docs | ❌ Empty (5 bytes) |
 
 ## Other Spaces
 - **PD** (Product Design) — Functional Requirements, CSV Upload, Design Team Onboarding

@@ -86,6 +86,34 @@ updated: 2026-02-24
 - Supports `account_id` filter to sync specific account only
 - Replication uses `timeStamp>=,YYYY-MM-DDTHH:MM:SS-00:00` filter
 
+## Target Reference
+
+> Writing data FROM Optiply TO Lightspeed R-Series
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-lightspeed-r-series](https://gitlab.com/mariocosta_opt/target-lightspeed-r-series.git) |
+| **Auth Method** | OAuth2 — `refresh_token`, `client_id`, `client_secret` → `/auth/oauth/token` |
+| **Base URL** | `https://api.lightspeedapp.com/API/V3/Account/{account_ids}` |
+
+### Sinks/Entities
+
+| Sink | Endpoint | HTTP Method |
+|------|----------|-------------|
+| BuyOrders | (not specified) | POST |
+
+### Error Handling
+- `backoff.expo` with max 5 tries, max 300s total
+- 429 handled with `Retry-After` header parsing (defaults to 60s)
+- Rate limiting: max 3 req/s enforced via `_rate_limit()`
+
+### Quirks
+- **Rate limiting is critical** — class-level `_last_request_time` tracking
+- Explicit `MIN_REQUEST_INTERVAL = 0.5s` (2 req/s conservative)
+- Supports `full_url` override in config
+
+---
+
 ## ETL Summary
 
 | Attribute | Value |

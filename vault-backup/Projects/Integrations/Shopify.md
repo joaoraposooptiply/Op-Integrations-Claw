@@ -126,6 +126,38 @@ updated: 2026-02-24
 - Uses `pyactiveresource` library for REST resources (NOT singer_sdk)
 - `_sdc_shop_*` fields added to records with shop metadata
 
+## Target Reference
+
+> Writing data FROM Optiply TO Shopify
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-shopify-v2](https://gitlab.com/joaoraposo/target-shopify-v2.git) |
+| **Auth Method** | OAuth2 via Shopify Python library — `access_token` (API key), `shop` name |
+| **Base URL** | `https://{shop}.myshopify.com/admin/api/2021-04` (shop from config) |
+
+### Sinks/Entities
+
+| Sink | Entity | HTTP Method |
+|------|--------|-------------|
+| upload_orders | `shopify.Order` | POST |
+| upload_products | `shopify.Product` + `shopify.InventoryLevel` | POST |
+| update_product | `shopify.Product` + `shopify.Variant` | PUT/PATCH |
+| update_inventory | `shopify.InventoryLevel.adjust` | POST |
+| update_fulfillments | `shopify.FulfillmentEvent` | POST |
+| fulfill_order | `shopify.Fulfillment` | POST |
+| upload_refunds | `shopify.Refund` | POST |
+
+### Error Handling
+- `backoff.expo` with max 5 tries on `ServerError`, `JSONDecodeError`, generic `Exception`
+- 429 uses `Retry-After` header for backoff
+- `pyactiveresource.connection.ClientError` handled specially
+
+### Quirks
+- Uses Shopify's `pyactiveresource` library
+- GraphQL for SKU lookups (`get_variant_by_sku`)
+- Reads from local JSON files in `input_path/`: `orders.json`, `products.json`, etc.
+
 ---
 
 ## ETL Summary

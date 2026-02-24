@@ -102,6 +102,34 @@ updated: 2026-02-24
 - Random User-Agent rotation to avoid rate limits
 - Custom meta_data processing (JSON serialization of complex objects)
 
+## Target Reference
+
+> Writing data FROM Optiply TO WooCommerce
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-woocommerce-v2](https://github.com/hotgluexyz/target-woocommerce-v2) |
+| **Auth Method** | Basic Auth — `consumer_key`:`consumer_secret` base64 encoded |
+| **Base URL** | `{site_url}/wp-json/wc/v3/` (site_url from config) |
+
+### Sinks/Entities
+
+| Sink | Endpoint | HTTP Method |
+|------|----------|-------------|
+| ProductSink | `products` | POST |
+| UpdateInventorySink | `products/{id}` | PUT |
+| SalesOrdersSink | `orders` | POST |
+| OrderNotesSink | `orders/{id}/notes` | POST |
+
+### Error Handling
+- Custom error handling with specific messages for 404, 403, 401, 429
+- Reports failures with detailed error context
+
+### Quirks
+- Rotates User-Agent (random_user_agent library) — WooCommerce blocks default agents
+- Reference data fetching with pagination (`get_reference_data`)
+- Export statistics tracking per sink
+
 ---
 
 ## ETL Summary

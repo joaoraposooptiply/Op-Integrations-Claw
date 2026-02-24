@@ -85,6 +85,30 @@ Pagination: `page` param, `next_page_token_jsonpath`: `$.pagination.next_page`
 - SSL verification configurable
 - Two stream variants: `_OptiplyStream` (custom output format), `_FindGet*Stream` (standard)
 
+## Target Reference
+
+> Writing data FROM Optiply TO Vendit
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-vendit](https://github.com/joaoraposooptiply/target-vendit.git) |
+| **Auth Method** | Multiple options: `token`, `api_key`, `vendit_api_key`, or `username`/`password` + `oauth_url` |
+| **Base URL** | `{api_url}/VenditPublicApi` (default: `https://api2.vendit.online`) |
+
+### Sinks/Entities
+
+| Sink | Endpoint | HTTP Method |
+|------|----------|-------------|
+| PrePurchaseOrders | (not specified) | POST |
+| BuyOrders | (not specified) | POST/PUT/PATCH |
+
+### Error Handling
+- Base `HotglueSink` + custom `VenditAuthenticator`
+
+### Quirks
+- Flexible auth — tries multiple methods
+- Lazy authenticator initialization (retries on first request if failed)
+
 ---
 
 ## ETL Summary

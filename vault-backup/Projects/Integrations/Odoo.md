@@ -110,6 +110,38 @@ updated: 2026-02-24
 - Ignores specific fields on error (ignore_list pattern)
 - Schema dynamically fetched via `fields_get`
 
+## Target Reference
+
+> Writing data FROM Optiply TO Odoo
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-odoo-v3](https://github.com/hotgluexyz/target-odoo-v3) |
+| **Auth Method** | Session auth — `db`, `username`, `password` → `/web/session/authenticate` |
+| **Base URL** | `{url}` (configurable, e.g., `https://odoo.instance.com`) |
+
+### Sinks/Entities
+
+| Sink | Odoo Model | HTTP Method |
+|------|------------|-------------|
+| TaxRates | `account.tax` | POST |
+| Vendors | `res.partner` | POST |
+| Suppliers | `res.partner` (supplier) | POST |
+| PurchaseInvoices | `account.move` | POST |
+| Invoices | `account.move` | POST |
+| Bills | `account.move` (bills) | POST |
+| BuyOrders | `purchase.order` | POST |
+
+### Error Handling
+- Base `HotglueSink` validation
+
+### Quirks
+- Uses XML-RPC / JSON-RPC (not REST)
+- Authentication returns `session_id` cookie
+- Has `mapping.py` + `mapping.json` for field transformations
+
+---
+
 ## ETL Summary
 
 | Attribute | Value |

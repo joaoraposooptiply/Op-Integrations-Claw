@@ -193,7 +193,41 @@ updated: 2026-02-24
 - `dont_use_current_division` option for warehouse lookups
 - Supports multiple warehouses with config options
 
-See also: [[Build Standards]], [[API Patterns]]
+## Target Reference
+
+> Writing data FROM Optiply TO Exact Online
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-exact](https://github.com/hotgluexyz/target-exact) |
+| **Auth Method** | OAuth2 — `auth_url`, `client_id`, `client_secret` → token endpoint |
+| **Base URL** | `https://start.exactonline.nl/api/v1/{division}` (division from config) |
+
+### Sinks/Entities
+
+| Sink | Endpoint | HTTP Method |
+|------|----------|-------------|
+| BuyOrdersSink | `/purchaseorder/PurchaseOrders` | POST |
+| UpdateInventory | `UpdateInventory` | POST |
+| ItemsSink | `/logistics/Items` | POST |
+| PurchaseInvoicesSink | `/purchase/PurchaseInvoices` | POST |
+| SuppliersSink | `/crm/Accounts` | POST |
+| PurchaseEntriesSink | `/purchaseentry/PurchaseEntries` | POST |
+| SalesOrdersSink | `/salesorder/SalesOrders` | POST |
+| ShopOrdersSink | `/manufacturing/ShopOrders` | POST |
+| WarehouseTransfersSink | `/inventory/WarehouseTransfers` | POST |
+
+### Error Handling
+- `backoff.expo` with max 5 tries on `RetriableAPIError`, `ReadTimeout`
+- 429, 500-599 → `RetriableAPIError`
+- 400-499 → `FatalAPIError`
+
+### Quirks
+- Returns XML (not JSON) from API — responses parsed via `xmltodict`
+- Supports `default_warehouse_id` → resolves to `warehouse_uuid`
+- Division can be overridden per record via `division` field
+
+---
 
 ## ETL Summary
 

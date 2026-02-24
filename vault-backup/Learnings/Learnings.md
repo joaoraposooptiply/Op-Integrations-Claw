@@ -15,3 +15,4 @@ updated: 2026-02-24
 - RLS policy blocks ALL queries without `SET app.tenant_id` — include in every DB function, including health/stats.
 - Section-level chunking (## headings) >> arbitrary 800-char splits for RAG quality.
 - Embed with context prefix (`title > section: content`) for better semantic match.
+- Use `profile=openclaw` for browser automation — NOT Chrome relay. Jay doesn't have the browser relay extension. OpenClaw managed browser is already logged into Confluence and works fine.

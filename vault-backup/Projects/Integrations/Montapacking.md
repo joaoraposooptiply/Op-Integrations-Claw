@@ -110,6 +110,35 @@ updated: 2026-02-24
 - Handles "No groups found for these filters" gracefully (terminates pagination)
 - `_write_state_message` clears partitions for non-replication-key streams
 
+## Target Reference
+
+> Writing data FROM Optiply TO Montapacking
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-montapacking-v2](https://github.com/hotgluexyz/target-montapacking-v2) |
+| **Auth Method** | Basic Auth — `username`:`password` base64 encoded |
+| **Base URL** | `https://api-v6.monta.nl/` |
+
+### Sinks/Entities
+
+| Sink | Endpoint | HTTP Method |
+|------|----------|-------------|
+| InboundForecastSink | (not specified) | POST |
+| UpdateInventory | (not specified) | POST |
+
+### Error Handling
+- 429 + 500-599 → `RetriableAPIError`
+- 400 with "InvalidReasons" → `InvalidPayloadError`
+- 401 with "Unauthorized" → `InvalidCredentialsError`
+- 400-499 → `FatalAPIError`
+
+### Quirks
+- Uses `hotglue_singer_sdk` with `AlertingLevel.WARNING`
+- Custom exception types from `hotglue_etl_exceptions`
+
+---
+
 ## ETL Summary
 
 | Attribute | Value |

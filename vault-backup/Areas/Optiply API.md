@@ -113,3 +113,46 @@ All entity attributes can be filtered:
 - 2024-12: supplier.type
 - 2024-09: products.maximumStock
 - 2024-08: manualServiceLevel, createdAtRemote
+
+## Target Reference (target-optiply)
+
+> This is the **target that writes data TO Optiply** from all integrations. Used by every tap integration to push data into Optiply.
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-optiply](https://github.com/hotgluexyz/target-optiply) |
+| **Auth Method** | OAuth2 — `client_id`, `client_secret`, `username`, `password` → token refresh with automatic retry on 401 |
+| **Base URL** | `https://api.optiply.com/v1` (configurable via `optiply_base_url` env var) |
+
+### Sinks/Entities
+
+| Sink | Endpoint | HTTP Method |
+|------|----------|-------------|
+| ProductsSink | `products` | POST/PATCH |
+| SupplierSink | `suppliers` | POST/PATCH |
+| SupplierProductSink | `supplierProducts` | POST/PATCH |
+| BuyOrderSink | `buyOrders` | POST/PATCH |
+| BuyOrderLineSink | `buyOrderLines` | POST/PATCH |
+| SellOrderSink | `sellOrders` | POST/PATCH |
+| SellOrderLineSink | `sellOrderLines` | POST/PATCH |
+
+### HTTP Methods
+- **POST** — create new entities
+- **PATCH** — update existing entities by `id`
+
+### Error Handling
+- `backoff.expo` with max 5 tries on `RetriableAPIError`, `ReadTimeout`
+- 401 triggers token refresh + retry
+- 404 logged as warning, continues
+- 500+ raises `RetriableAPIError`
+- 400+ raises `FatalAPIError`
+
+### Quirks
+- Uses `application/vnd.api+json` content type (JSONAPI spec)
+- Supports `account_id` and `coupling_id` as query params
+- Generates `target-state.json` for Hotglue-style state management
+
+### See Also
+- [[Build Standards]] — for tap/target building guidelines
+- [[ETL Patterns]] — for ETL notebook patterns
+

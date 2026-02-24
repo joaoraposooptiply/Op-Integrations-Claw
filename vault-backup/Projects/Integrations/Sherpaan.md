@@ -97,6 +97,32 @@ updated: 2026-02-24
 - Nested XML objects flattened with JSON serialization for complex types
 - `_write_state_message` fix to clean partitions for non-incremental streams
 
+## Target Reference
+
+> Writing data FROM Optiply TO Sherpaan
+
+| Attribute | Details |
+|-----------|---------|
+| **Target Repo** | [target-sherpaan](https://github.com/joaoraposooptiply/target-sherpaan.git) |
+| **Auth Method** | SOAP + custom auth — `shop_id`, `security_code` in SOAP envelope |
+| **Base URL** | `https://sherpaservices-prd.sherpacloud.eu` (configurable) |
+
+### Sinks/Entities
+
+| Sink | SOAP Method | HTTP Method |
+|------|-------------|-------------|
+| PurchaseOrderSink | `AddOrderedPurchase` + `ChangePurchase2` | SOAP POST |
+
+### Error Handling
+- `tenacity.retry` with 3 attempts, exponential backoff (4-10s)
+- Raises on HTTP errors
+
+### Quirks
+- Uses SOAP (not REST)
+- Two-step process: first `AddOrderedPurchase`, then `ChangePurchase2` for lines
+- XML payloads with namespace `http://sherpa.sherpaan.nl/`
+- Timeout configurable (default 300s)
+
 ---
 
 ## ETL Summary
