@@ -16,3 +16,5 @@ updated: 2026-02-24
 - Section-level chunking (## headings) >> arbitrary 800-char splits for RAG quality.
 - Embed with context prefix (`title > section: content`) for better semantic match.
 - Use `profile=openclaw` for browser automation — NOT Chrome relay. Jay doesn't have the browser relay extension. OpenClaw managed browser is already logged into Confluence and works fine.
+- MiniMax models were duplicated in both OpenRouter AND direct minimax providers. OpenRouter copy caused rate limits on wrong API. Fix: remove `minimax/*` models from openrouter provider in both `openclaw.json` and `agents/main/agent/models.json`. Direct provider uses `MiniMax-M2.5` (capital M, no prefix).
+- Provider routing: Anthropic = direct, MiniMax = direct (api.minimax.io), everything else = OpenRouter.
