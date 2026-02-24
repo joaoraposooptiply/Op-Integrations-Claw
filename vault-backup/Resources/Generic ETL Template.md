@@ -322,3 +322,6 @@ auth = OptiplyAuthenticator(api_creds, config_path, OUTPUT_DIR)
   // Varies per integration
 }
 ```
+
+## Related
+- [[Snapshot Queries]] — SQL queries that generate snapshot CSVs

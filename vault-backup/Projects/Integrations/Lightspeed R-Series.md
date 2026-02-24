@@ -11,6 +11,8 @@ updated: 2026-02-24
 
 > Retail POS. Multi-location, bidirectional, supports compositions.
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board (all 30 min)
 | Entity | Direction |
 |--------|-----------|

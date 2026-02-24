@@ -11,6 +11,8 @@ updated: 2026-02-24
 
 > **Secondary integration only** — only syncs Sell Orders. Products come from another source.
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board
 | Entity | Direction | Frequency |
 |--------|-----------|-----------|

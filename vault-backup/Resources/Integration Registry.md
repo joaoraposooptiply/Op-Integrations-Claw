@@ -50,3 +50,7 @@ updated: 2026-02-24
 - **ETLs:** `/Users/jay/Documents/Optiply/optiply-scripts/import/{integration}/etl.ipynb`
 - **Generic Template:** `/Users/jay/Documents/Optiply/optiply-scripts/import/Generic/etl.ipynb`
 - **Utils:** `/Users/jay/Documents/Optiply/optiply-scripts/import/Generic/utils/`
+
+## Related
+- [[Cloud System Schema]] — standard schema for BigQuery/AWS/Azure customers
+- [[Snapshot Queries]] — SQL queries for HotGlue snapshot construction

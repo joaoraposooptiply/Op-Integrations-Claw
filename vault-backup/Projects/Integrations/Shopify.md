@@ -90,6 +90,8 @@ updated: 2026-02-24
 
 > See also: [[Build Standards]] | [[ETL Patterns]]
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ### Base URL
 `{shop}.myshopify.com/admin/api/{version}/` (REST) and `/admin/api/{graphql_version}/graphql.json` (GraphQL)
 

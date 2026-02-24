@@ -89,6 +89,8 @@ Pagination: `page` param, `next_page_token_jsonpath`: `$.pagination.next_page`
 
 > Writing data FROM Optiply TO Vendit
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 | Attribute | Details |
 |-----------|---------|
 | **Target Repo** | [target-vendit](https://github.com/joaoraposooptiply/target-vendit.git) |

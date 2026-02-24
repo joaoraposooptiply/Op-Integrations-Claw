@@ -10,6 +10,8 @@ updated: 2026-02-24
 # Sherpaan Integration
 
 > ★ **Gold standard** — most recent, uses new Generic ETL template patterns.
+
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
 > API is SOAP/XML (asmx endpoints), not REST.
 
 ## Sync Board (all 60 min)
@@ -59,7 +61,7 @@ updated: 2026-02-24
 
 ## API Reference
 
-> See also: [[Build Standards]] | [[ETL Patterns]]
+> See also: [[Build Standards]], [[Sherpaan Gold Standard]] | [[ETL Patterns]]
 
 ### Base URL
 `{base_url}/{shop_id}/Sherpa.asmx` (default: `https://sherpaservices-prd.sherpacloud.eu`)

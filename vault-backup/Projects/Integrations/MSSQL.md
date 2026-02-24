@@ -10,6 +10,8 @@ updated: 2026-02-24
 # MSSQL Integration
 
 > Same pattern as BigQuery — customer writes SQL queries mapped to fixed query names.
+
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
 > See [[BigQuery]] for full schema documentation.
 
 ## Key Differences from BigQuery

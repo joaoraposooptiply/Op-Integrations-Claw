@@ -10,6 +10,8 @@ updated: 2026-02-24
 # Tilroy Integration
 
 > Belgian fashion/retail POS. Multi-language, multi-shop, SKU-level (colour/size variants).
+
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
 > ⚠️ Target is NOT tested/done.
 
 ## Sync Board (all 30 min)

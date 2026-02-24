@@ -11,6 +11,8 @@ updated: 2026-02-24
 
 > Uses XML-RPC API — problematic for debugging. Mostly full syncs.
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board (all 30 min, BO export 15 min)
 | Entity | Direction |
 |--------|-----------|

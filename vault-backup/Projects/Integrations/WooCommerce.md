@@ -65,6 +65,8 @@ updated: 2026-02-24
 
 > See also: [[Build Standards]] | [[ETL Patterns]]
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ### Base URL
 `{site_url}/wp-json/wc/v3/`
 

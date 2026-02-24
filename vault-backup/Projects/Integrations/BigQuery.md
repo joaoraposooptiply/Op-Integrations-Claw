@@ -11,6 +11,8 @@ updated: 2026-02-24
 
 > Customer writes custom SQL queries mapped to fixed query names. Same pattern for MSSQL/AWS Redshift.
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## How It Works
 - Customer creates SQL queries in BigQuery with fixed names
 - Each query maps to an Optiply entity

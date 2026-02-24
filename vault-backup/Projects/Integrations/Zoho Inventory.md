@@ -11,6 +11,8 @@ updated: 2026-02-24
 
 > Full ERP integration with Product Compositions, Assembly/Production Orders support.
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board (all 60 min, BO export 15 min)
 | Entity | Direction |
 |--------|-----------|

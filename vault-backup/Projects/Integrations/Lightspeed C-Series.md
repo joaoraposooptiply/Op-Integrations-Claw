@@ -8,6 +8,8 @@ updated: 2026-02-24
 
 # Lightspeed C-Series Integration
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board (all every 10 min)
 | Entity | Direction | Frequency |
 |--------|-----------|-----------|

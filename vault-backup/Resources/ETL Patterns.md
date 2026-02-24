@@ -49,3 +49,6 @@ Every integration must map source data to these Optiply entities:
 ---
 
 *Extend with integration-specific mappings as needed.*
+
+## Gold Standard
+- [[Sherpaan Gold Standard]] — full cell-by-cell breakdown of the Sherpaan ETL (new Generic template pattern)

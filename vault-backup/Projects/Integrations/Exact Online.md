@@ -11,6 +11,8 @@ updated: 2026-02-24
 
 > Most complex integration. 16+ entity types, bidirectional sync, 30+ config flags.
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board (all every 30 min)
 | Entity | Direction | Notes |
 |--------|-----------|-------|

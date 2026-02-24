@@ -9,6 +9,8 @@ updated: 2026-02-24
 
 # EasyEcom Integration
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board (all 30 min, BO export 10 min)
 | Entity | Direction |
 |--------|-----------|

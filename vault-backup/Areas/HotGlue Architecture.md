@@ -48,3 +48,6 @@ Remote System → Tap (extract) → Snapshot (cache) → ETL (transform) → Tar
 - Uses `hotglue_singer_sdk` (NOT standard `singer_sdk`)
 - Python-based
 - Handles: auth, pagination, rate limiting, state management, schema discovery
+
+## Related
+- [[Snapshot Queries]] — snapshot construction queries for HotGlue ETL

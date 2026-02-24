@@ -11,6 +11,8 @@ updated: 2026-02-24
 
 > Two flavours: **Simple** (Products + SO) and **Full** (+ Suppliers + SP + BO bidirectional).
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board (all hourly, BO export 15 min)
 ### Simple
 Products + Sell Orders only

@@ -60,3 +60,6 @@ updated: 2026-02-24
 ## Commit Convention
 - Repo: `~/optiply-integrations/`
 - Message: `"AI-generated [integration] tap/target"`
+
+## Reference Implementation
+- [[Sherpaan Gold Standard]] — the canonical ETL notebook all integrations should follow

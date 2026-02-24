@@ -10,6 +10,8 @@ updated: 2026-02-24
 
 > Two flavours: **Simple** (BO + Receipts only) and **Full** (all entities).
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## Sync Board
 ### Simple (1st flavour)
 | Entity | Direction | Frequency |

@@ -11,6 +11,8 @@ updated: 2026-02-24
 
 > Two flavours: **Secondary** (sell orders only) and **Full** (products + sell orders).
 
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
+
 ## API Regions
 | Region | Endpoint | AWS Region |
 |--------|----------|------------|

@@ -10,6 +10,8 @@ updated: 2026-02-24
 # Magento 2 Integration
 
 > Two variants: **Non-Warehouse** (simpler) and **Warehouse** (MSI multi-source inventory).
+
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
 > Stock endpoint has NO `updated_at` filter — forces full syncs.
 
 ## Sync Board

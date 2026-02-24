@@ -10,6 +10,8 @@ updated: 2026-02-24
 # Amazon Vendor Central Integration
 
 > Vendor Central is the B2B counterpart to Seller Central — vendors sell directly to Amazon.
+
+**Part of** [[Optiply - Company|Optiply]]'s integration ecosystem · Runs on [[HotGlue Architecture|HotGlue]] · Syncs to [[Optiply API]] · Schema: [[Generic Data Mapping]] · Registry: [[Integration Registry]]
 > Two flavors: **Secondary** (sell orders only) and **Full** (products + sell orders).
 
 ## Sync Board (all 30 min)
