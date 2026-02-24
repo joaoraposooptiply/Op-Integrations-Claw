@@ -86,6 +86,66 @@ updated: 2026-02-24
 - Uses `/inventory_levels/adjust.json`
 - `inventory_item_id` stored in integration cache, not in Optiply directly
 
+## API Reference
+
+> See also: [[Build Standards]] | [[ETL Patterns]]
+
+### Base URL
+`{shop}.myshopify.com/admin/api/{version}/` (REST) and `/admin/api/{graphql_version}/graphql.json` (GraphQL)
+
+### Auth Method
+- **Type:** OAuth2 (admin/oauth/access_token) OR access_token/API key directly
+- **Token Refresh:** OAuth flow with client_id + client_secret → access_token. No explicit refresh (note: "if job runs longer than 24 hours, this will need to be refreshed")
+
+### Endpoints
+| Stream Name | HTTP Method | Path | Pagination |
+|-------------|-------------|------|------------|
+| abandoned_checkouts | GET | /checkouts.json | Date window |
+| customers | GET | /customers.json | Date window + since_id |
+| orders | GET | /orders.json | Date window + since_id |
+| order_refunds | GET | /refunds.json | Date window |
+| products | GET | /products.json | Date window + since_id |
+| inventory_levels | GET | /inventory_levels.json | since_id |
+| locations | GET | /locations.json | Full table |
+| transactions | GET | /orders/{order_id}/transactions.json | Date window |
+
+### Rate Limiting
+- **Strategy:** `@shopify_error_handling` decorator with backoff.expo
+- **Backoff Config:** Retry-After header handling (`retry-after` or `Retry-After`), max retry time: 900 seconds
+- **Retries:** ServerError, JSONDecodeError, ConnectionError, RetryableAPIError, ClientError (429 only)
+
+### Error Handling
+- **429:** Exponential backoff with Retry-After
+- **500+:** ServerError retry
+- **Custom Exception:** `RetryableAPIError`
+- **Also handles:** ResourceNotFound, UnauthorizedAccess, ForbiddenAccess
+
+### Quirks
+- Uses GraphQL to fetch shop_id if not in config
+- Date windows limited to 365 days to avoid 500 errors
+- Uses `pyactiveresource` library for REST resources (NOT singer_sdk)
+- `_sdc_shop_*` fields added to records with shop metadata
+
+---
+
+## ETL Summary
+
+- **Pattern:** Old (uses custom mapping functions)
+- **Entities Processed:**
+  - Products (explodes variants JSON)
+  - Suppliers (from Vendor field)
+  - SupplierProducts
+- **Key Config Flags:**
+  - `sync_product_deletions` - Full sync flag for product deletions
+- **Custom Logic Highlights:**
+  - Variant-level inventory: Uses `variants.inventory_quantity` for stockLevel
+  - Vendor extraction: Extracts unique vendors from products for supplier creation
+  - Price mapping from `variants.price`, barcode from `variants.barcode`
+  - Uses `is_subTenant` check for parent snapshot directories
+  - Decimal handling for price/inventory values
+
+---
+
 ## Links
 - Tap: [tap-shopify](https://github.com/hotgluexyz/tap-shopify.git)
 - Target: [target-shopify-v2](https://gitlab.com/joaoraposo/target-shopify-v2.git)

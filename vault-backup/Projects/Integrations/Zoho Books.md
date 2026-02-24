@@ -49,6 +49,66 @@ Suppliers, Supplier Products, Buy Orders (bidirectional)
 - Zoho → OP: filter not billed/cancelled, totalValue=total×exchange_rate
 - OP → Zoho: reference_number=buyOrderId
 
+## API Reference
+
+### Base URL
+`www.zohoapis.com` (default) — domain-based: `zohoapis.eu`, `zohoapis.in`, `zohoapis.com.au`, `zohoapis.com.cn` (based on `location` config)
+
+### Auth Method
+OAuth2 with refresh token using Zoho SDK (`ZohoOAuthClient`). Token persisted in `.pkl` file. Supports sandbox mode.
+
+### Endpoints
+| Stream | HTTP Method | Path | Pagination |
+|--------|-------------|------|------------|
+| Products | GET | Dynamic (CRM modules) | Modified_Time (incremental) |
+| Sales_Orders | GET | Dynamic | Modified_Time or BULK API |
+| Purchase_Orders | GET | Dynamic | Modified_Time or BULK API |
+| Vendors | GET | Dynamic | Modified_Time |
+| Invoices | GET | Dynamic | Modified_Time |
+| Accounts | GET | Dynamic | Modified_Time |
+| Contacts | GET | Dynamic | Modified_Time |
+
+Full modules: Activities, Accounts, Leads, Contacts, Deals, Tasks, Calls, Products, Quotes, Sales_Orders, Purchase_Orders, Invoices, Vendors, Price_Books, Cases, Solutions, Users. Plus custom views.
+
+### Rate Limiting
+- Checks `X-Rate-Limit-Remaining` / `X-API-CREDITS-REMAINING` headers
+- Raises `RetriableAPIException` when limit hits 0
+
+### Error Handling
+- Custom exceptions: `TapZohoException`, `TapZohoQuotaExceededException`, `RetriableAPIException`
+- Backoff on `ConnectionError` (max 10 tries, factor 2)
+
+### Quirks
+- Uses `zcrmsdk` (Zoho CRM SDK)
+- Supports both REST and BULK API modes
+- Schema dynamically built from field definitions
+- Lookup fields handled specially (`__id`, `__name` suffix)
+
+---
+
+## ETL Summary
+
+**Pattern:** OLD
+
+**Entities Processed:**
+- Products
+- Suppliers
+- SupplierProducts
+- SellOrders
+- BuyOrders
+
+**Key Config Flags:**
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `pullAllOrders` | true | Pull all orders |
+
+**Custom Logic Highlights:**
+- Minimal custom logic visible
+- `pullAllOrders` flag controls order filtering
+- Two flavors: Simple (Products + SO) and Full (+ Suppliers + SP + BO bidirectional)
+
+---
+
 ## Links
 - Tap: [tap-zoho](https://gitlab.com/hotglue/tap-zoho)
 - Target: [target-zohobooks-v2](https://gitlab.com/hotglue/target-zohobooks-v2)

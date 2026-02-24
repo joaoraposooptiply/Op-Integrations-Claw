@@ -75,6 +75,74 @@ updated: 2026-02-24
 - Mapped from InboundForecast.ReceivedQuantity
 - Only quantities > 0
 
+## API Reference
+
+| Attribute | Value |
+|-----------|-------|
+| **Base URL** | `https://api-v6.monta.nl` |
+| **Auth Method** | Basic Auth (`username` + `password`) |
+| **Pagination** | Page number (`?page=N`) |
+| **Rate Limiting** | Backoff expo (base 2, factor 3, max 7 tries), explicit timeout 300s |
+
+### Endpoints
+
+| Stream | HTTP Method | Path | Pagination |
+|--------|-------------|------|------------|
+| products | GET | `/products` | Page |
+| products_stock | GET | `/products_stock` | Page |
+| inbounds | GET | `/inbounds` | Page |
+| inboundforecast | GET | `/inboundforecast/group` | Page |
+| productrule | GET | `/productrule` | Page |
+| supplier | GET | `/supplier` | Page |
+| order | GET | `/order` | Page |
+| returnforecast | GET | `/returnforecast` | Page |
+| product_events | GET | `/product/events/since_id/{last_eventId}` | Cursor |
+| inbound_events | GET | `/inboundforecast/events/since_id/{last_eventId}` | Cursor |
+
+### Error Handling
+- Extra retry: 429, 401
+- 404 returns empty (not fatal)
+- 5xx → RetriableAPIError
+
+### Quirks
+- Subtracts 1 hour from replication_key value (timezone workaround)
+- Configurable sync flags: `sync_products`, `sync_suppliers`, `sync_sell_orders`, `sync_buy_orders`, `sync_receipts`, `use_return_forecast`
+- Handles "No groups found for these filters" gracefully (terminates pagination)
+- `_write_state_message` clears partitions for non-replication-key streams
+
+## ETL Summary
+
+| Attribute | Value |
+|-----------|-------|
+| **Pattern** | Old (most full-featured old-pattern ETL) |
+| **Entities** | Products, Suppliers, SupplierProducts, SellOrders, BuyOrders, ReceiptLines |
+
+### Key Config Flags
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `second_flavor` | — | Full product/supplier sync vs buy orders only |
+| `sync_prod_stock_only` | false | Stock-only sync mode |
+| `upload_stocks_to_parent` | false | Subtenant stock upload |
+| `use_StockInTransit` | false | Include in-transit stock |
+| `use_return_forecast` | false | Adjust for returns |
+| `sync_minimum_stock` | false | Sync minimum stock |
+| `map_stockLevel` | true | Include stock in diff check |
+| `sp_name_customField1` | — | Custom field mapping |
+| `sync_leadTime_supProducts` | false | Lead time sync |
+| `del_bol_completed` | false | Delete BOL for completed |
+| `force_patch_products` | false | Force patch all products |
+| `force_patch_supplier_products` | false | Force patch all SPs |
+
+### Custom Logic
+- **Two flavors**: First flavor (buy orders only) vs second flavor (full sync)
+- **Stock-only mode**: Only sync stock changes, not full products
+- **Stock in transit**: Includes StockInTransit in stockLevel
+- **Return forecast**: Adjusts stock with return forecasts
+- **Inbound forecast**: Maps `inboundforecast` and `inbounds` to buy orders and receipt lines
+- Supplier product 409 handling (duplicate detection)
+
+---
+
 ## Links
 - Tap: [tap-montapacking](https://gitlab.com/hotglue/tap-montapacking)
 - Target: [target-montapacking-v2](https://github.com/hotgluexyz/target-montapacking-v2)

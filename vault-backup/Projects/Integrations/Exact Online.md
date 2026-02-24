@@ -133,6 +133,93 @@ updated: 2026-02-24
 8. **Receipt lines with lotSize:** quantity = QuantityReceived × lotSize
 9. **Product Compositions circular reference protection:** A→B and B→A blocked by DB constraint
 
+## API Reference
+
+| Attribute | Details |
+|-----------|---------|
+| **Base URL** | `https://start.exactonline.nl/api/v1/{current_division}/` |
+| **Auth** | OAuth2 with refresh_token grant (tokens refresh every 10 min) |
+| **SDK** | singer_sdk (hotglue fork) |
+| **Response Format** | XML (parsed via xmltodict, `d:` prefixes stripped) |
+
+### Endpoints
+| Stream | Path | Pagination |
+|--------|------|------------|
+| items | `logistics/Items` | OData $skiptoken |
+| purchase_orders | `purchaseorder/PurchaseOrders` | OData $skiptoken |
+| sales_orders | `salesorder/SalesOrders` | OData $skiptoken |
+| sales_order_lines | `salesorder/SalesOrderLines` | OData $skiptoken |
+| supplier_products | `logistics/SupplierItem` | OData $skiptoken |
+| warehouses | `inventory/Warehouses` | OData $skiptoken |
+| suppliers | `crm/Accounts` | OData $skiptoken |
+| sales_invoices | `salesinvoice/SalesInvoices` | OData $skiptoken |
+| sales_invoice_lines | `salesinvoice/SalesInvoiceLines` | OData $skiptoken |
+| sales_items_prices | `logistics/SalesItemPrices` | OData $skiptoken |
+| stock_positions | `inventory/StockPositions` | OData $skiptoken |
+| logistics_stock_positions | `logistics/ItemWarehouses` | OData $skiptoken |
+| gl_accounts | `financial/GLAccounts` | OData $skiptoken |
+| purchase_invoices | `purchase/PurchaseInvoices` | OData $skiptoken |
+| vat_codes | `vat/VATCodes` | OData $skiptoken |
+| deleted | `$metadata/deleted` | OData $skiptoken |
+| bill_of_materials_versions | `manufacturing/BillOfMaterialVersions` | OData $skiptoken |
+| manufacturing_shop_orders | `manufacturing/ShopOrders` | OData $skiptoken |
+| goods_receipt_lines | `purchaseorder/GoodsReceiptLines` | OData $skiptoken |
+| purchase_entries | `purchaseentry/PurchaseEntries` | OData $skiptoken |
+| purchase_items_prices | `logistics/PurchaseItemPrices` | OData $skiptoken |
+| purchase_return_lines | `purchaseorder/PurchaseReturnLines` | OData $skiptoken |
+| assembly_orders | `manufacturing/AssemblyOrders` | OData $skiptoken |
+| bill_of_materials | `manufacturing/BillOfMaterials` | OData $skiptoken |
+| exchange_rates | `financial/ExchangeRates` | OData $skiptoken |
+| transaction_lines | `financialtransaction/TransactionLines` | OData $skiptoken |
+| sales_price_lists | `sales/SalesPriceLists` | OData $skiptoken |
+
+### Rate Limiting
+- **1.01s sleep** between ALL requests (hard-coded)
+- 429 → reads `X-RateLimit-Reset` header → RetriableAPIError
+- 429 with remaining=0 → FatalAPIError (daily limit hit)
+- 500-599 → RetriableAPIError with exponential backoff
+
+### Error Handling
+| Code | Action |
+|------|--------|
+| 408 | RetriableAPIError (timeout) |
+| 429 | RetriableAPIError or FatalAPIError (daily limit) |
+| 400-499 | FatalAPIError |
+| 500+ | RetriableAPIError |
+
+### Quirks
+- XML responses parsed via `xmltodict` — `d:` prefix stripping in post-processing
+- `_write_state_message` fix for partition cleanup
+- `dont_use_current_division` option for warehouse lookups
+- Supports multiple warehouses with config options
+
+See also: [[Build Standards]], [[API Patterns]]
+
+## ETL Summary
+
+| Attribute | Details |
+|-----------|---------|
+| **Pattern** | OLD (most complex in the fleet) |
+| **Entities** | Products, ProductCompositions, Suppliers, SupplierProducts, SellOrders, BuyOrders, ReceiptLines — all 7 core entities |
+
+### Key Config Flags
+30+ flags — see Configuration Flags section above for full list. Highlights:
+- `use_sales_orders` / `use_sales_invoices` — dual sell order source
+- `sync_stock_montapacking` / `sync_stock_qls` — external WMS stock merging
+- `use_bill_of_materials_versions` — manufacturing BOM path
+- `use_assembly_orders` / `use_production_orders` — assembly/manufacturing flows
+- `export_stock_transfers` — converts BOs to warehouse transfers
+- `unit_filter` / `unit_factors` — unit conversion affecting stocks, compositions, lot sizes
+
+### Custom Logic Highlights
+- **Dual stock sources**: Can merge stock from Montapacking + QLS on top of Exact stock
+- **BOM/Assembly**: Two paths for product compositions (BOM vs BillOfMaterialVersions)
+- **10 product classes**: Complex status mapping using IsMakeItem, IsPurchaseItem, IsOnDemandItem, EndDate
+- **Volume discounts**: Price list support with PriceListCode filtering
+- **Bidirectional BOs**: Full CRUD with receipt date calculation, lot size conversion, PurchaseAgent assignment
+
+See also: [[ETL Patterns]], [[Generic ETL Template]]
+
 ## Related Pages
 - [Buy Orders Common Errors](https://optiply.atlassian.net/wiki/spaces/IN/pages/2429059077)
 - [Unit Factor Conversion](https://optiply.atlassian.net/wiki/spaces/IN/pages/2626846725)

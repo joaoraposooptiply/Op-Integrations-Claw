@@ -46,6 +46,76 @@ updated: 2026-02-24
 ## Buy Orders (bidirectional): completed on "closed" status
 ## Assembly Orders: bidirectional, export to specific warehouse
 
+## API Reference
+
+### Base URL
+`https://www.zohoapis.{domain}/inventory/v1` (domain: com, eu, in, au, ca)
+
+### Auth Method
+OAuth2 with refresh_token. Domain derived from accounts-server config. Token auto-refreshed via authenticator.
+
+### Endpoints
+| Stream | HTTP Method | Path | Pagination |
+|--------|-------------|------|------------|
+| Products | GET | `/Products` | Page-based |
+| SalesOrders | GET | `/SalesOrders` | Page-based |
+| PurchaseOrders | GET | `/PurchaseOrders` | Page-based |
+| Suppliers | GET | `/Suppliers` | Page-based |
+| PurchaseReceives | GET | `/PurchaseReceives` | Page-based |
+| CompositeItems | GET | `/CompositeItems` | Page-based |
+| AssemblyOrders | GET | `/AssemblyOrders` | Page-based |
+
+Detail variants: each endpoint has a corresponding `/.../...` detail endpoint (e.g., `/salesorders/{salesorder_id}`)
+
+### Rate Limiting
+- 429 handling with `Retry-After` header parsing (supports seconds or HTTP-date)
+- Sleeps for specified time
+- Backoff via `backoff.expo(base=3, factor=6)`
+
+### Error Handling
+- 429 → `RetriableAPIError` + backoff
+- 5xx → `RetriableAPIError`
+- 4xx → `FatalAPIError`
+
+### Quirks
+- Custom fields fetched from `/settings/preferences/` and moved to root level
+- 1s sleep between detail requests
+- NA/empty string replacement
+- Domain-based URL selection
+
+---
+
+## ETL Summary
+
+**Pattern:** OLD
+
+**Entities Processed:**
+- Products
+- ProductCompositions
+- Suppliers
+- SupplierProducts
+- SellOrders
+- BuyOrders
+- BuyOrderLines
+- ReceiptLines
+- AssemblyOrders
+
+**Key Config Flags:**
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `pullAllSellOrders` | false | Pull all sell orders |
+| `Sync_Stock` | true | Disable stock sync |
+| `warehouse_ids` | allWarehouses | Filter stock by warehouse |
+| `Sync_Assembled` | false | Sync composed products |
+| `export_warehouse_id` | null | Send assemblies to specific warehouse |
+
+**Custom Logic Highlights:**
+- Different flag naming: `pullAllSellOrders` (not `pullAllOrders`)
+- Assembly/Production Orders support
+- Product compositions from `/compositeitems` endpoint
+
+---
+
 ## Links
 - Tap: [tap-zoho-inventory](https://github.com/hotgluexyz/tap-zoho-inventory)
 - Target: [target-zoho-inventory](https://github.com/hotgluexyz/target-zoho-inventory)

@@ -54,6 +54,62 @@ updated: 2026-02-24
 - BO not creating in LS → verify location code (case-sensitive)
 - Stock incorrect → verify location selection
 
+## API Reference
+
+| Attribute | Value |
+|-----------|-------|
+| **Base URL** | `https://api.lightspeedapp.com/API/V3` |
+| **Auth Method** | OAuth 2.0 (refresh_token grant) with auto-refresh on 401 |
+| **Pagination** | Cursor-based via `@attributes.next` URL (if present) |
+| **Rate Limiting** | Backoff on connection errors (ChunkedEncodingError, ProtocolError, ReadTimeoutError) |
+
+### Endpoints
+
+| Stream | HTTP Method | Path | Pagination |
+|--------|-------------|------|------------|
+| Account | GET | `/Account.json` | — |
+| Item | GET | `/Account/{accountID}/Item.json` | Cursor |
+| Vendor | GET | `/Account/{accountID}/Vendor.json` | Cursor |
+| Order | GET | `/Account/{accountID}/Order.json` | Cursor |
+| Sale | GET | `/Account/{accountID}/Sale.json` | Cursor |
+| Shipment | GET | `/Account/{accountID}/Shipment.json` | Cursor |
+| Shop | GET | `/Account/{accountID}/Shop.json` | Cursor |
+
+### Error Handling
+- 401 → force token refresh + retry
+- 400 with "Please try again later" → RetriableAPIError
+- 5xx + 401 → RetriableAPIError
+
+### Quirks
+- OAuth token refresh writes new tokens to config file automatically
+- Supports configurable relations for items/vendors/orders/sales/shipments
+- Supports `account_id` filter to sync specific account only
+- Replication uses `timeStamp>=,YYYY-MM-DDTHH:MM:SS-00:00` filter
+
+## ETL Summary
+
+| Attribute | Value |
+|-----------|-------|
+| **Pattern** | Generic ETL (uses `utils.payloads` + `utils.actions`) |
+| **Entities** | Products, ProductCompositions (BOM/assemblies), Suppliers, SupplierProducts, SellOrders, SellOrderLines, BuyOrders, BuyOrderLines, ReceiptLines |
+
+### Key Config Flags
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `stock_warehouse_option` | "one_warehouse" | Warehouse selection mode |
+| `stock_warehouse_ids` | — | Comma-separated shop IDs |
+| `default_shop_name` | — | Warehouse code |
+| `sync_all_orders` | false | Sync all statuses (not just completed) |
+| `buyorders_shop_id` | — | Auto-populated from default shop |
+
+### Custom Logic
+- **Warehouse filtering**: `parse_warehouse_codes()` function (one/multiple/all)
+- **Force patch flags** from state.json: `force_patch_supplier_products`, `force_patch_products`
+- **Product compositions** (BOM): Handles assembly/box item types, marks parent as `assembled=True`
+- **Supplier products**: Complex concat_ids = `productId_supplierId`, handles supplier changes (delete + recreate), 409 conflict handling
+
+---
+
 ## Links
 - Tap: [tap-lightspeed-rseries](https://github.com/mariocostaoptiply/tap-lightspeed-rseries.git)
 - Target: [target-lightspeed-r-series](https://gitlab.com/mariocosta_opt/target-lightspeed-r-series.git)

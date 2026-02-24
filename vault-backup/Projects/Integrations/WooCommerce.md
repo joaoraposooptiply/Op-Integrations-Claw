@@ -61,6 +61,65 @@ updated: 2026-02-24
 - **Deletions:** Orders cancelled/refunded/failed → deleted
 - **No line updates:** Line deletions or additions to existing orders NOT synced
 
+## API Reference
+
+> See also: [[Build Standards]] | [[ETL Patterns]]
+
+### Base URL
+`{site_url}/wp-json/wc/v3/`
+
+### Auth Method
+- **Type:** Basic Auth (consumer_key + consumer_secret as username/password)
+- **Token Refresh:** N/A - Basic Auth with static credentials
+
+### Endpoints
+| Stream Name | HTTP Method | Path | Pagination |
+|-------------|-------------|------|------------|
+| products | GET | /products | Page-based (X-WP-TotalPages) |
+| orders | GET | /orders | Page-based |
+| coupons | GET | /coupons | Page-based |
+| product_variations | GET | /products/{id}/variations | Page-based |
+| subscriptions | GET | /subscriptions | Page-based |
+| customers | GET | /customers | Page-based |
+| store_settings | GET | /system_status | Full table |
+| order_notes | GET | /orders/{id}/notes | Page-based |
+| orders_refunds | GET | /orders/{id}/refunds | Page-based |
+
+### Rate Limiting
+- **Strategy:** `backoff.expo` with max_tries=10, factor=4
+- **Backoff Config:** Exponential backoff, factor=4
+- **Retries:** RetriableAPIError, ReadTimeout, ConnectionError, ProtocolError, RemoteDisconnected, ChunkedEncodingError
+
+### Error Handling
+- **401:** InvalidCredentialsError
+- **429, 500-599, 403, 104:** RetriableInvalidCredentialsError
+- **400-499:** InvalidCredentialsError (Fatal)
+- **Config Option:** `ignore_server_errors` to skip validation
+
+### Quirks
+- Auto-detects WooCommerce version via `/system_status` endpoint
+- Older versions (<5.6) use different date filtering (`after` vs `modified_after`)
+- Random User-Agent rotation to avoid rate limits
+- Custom meta_data processing (JSON serialization of complex objects)
+
+---
+
+## ETL Summary
+
+- **Pattern:** Old (simplest in batch)
+- **Entities Processed:**
+  - Products only
+- **Key Config Flags:**
+  - `sync_product_deletions` - Full sync flag
+- **Custom Logic Highlights:**
+  - Simpler product mapping than Shopify
+  - Handles product status (enabled/disabled)
+  - Webhook support for product deletions
+  - Most minimal ETL in this batch
+  - No snapshot-based change detection (compares full input)
+
+---
+
 ## Links
 - Tap: [tap-woocommerce](https://github.com/hotgluexyz/tap-woocommerce)
 - Target: [target-woocommerce-v2](https://github.com/hotgluexyz/target-woocommerce-v2)

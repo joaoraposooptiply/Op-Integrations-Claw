@@ -66,6 +66,93 @@ updated: 2026-02-24
 
 ## Receipt Lines: from purchase.order.line (qty + date)
 
+## API Reference
+
+| Attribute | Value |
+|-----------|-------|
+| **Base URL** | `{url}/xmlrpc/2` (XML-RPC protocol) |
+| **Auth Method** | XML-RPC (`db` + `username` + `password`) |
+| **Pagination** | Offset-based (`offset`, `limit` = page_size) |
+| **Rate Limiting** | Backoff expo (max 8 tries, factor 3) on OverflowError, ResponseNotReady, ProtocolError, RetriableAPIError |
+
+### Endpoints
+
+| Stream | XML-RPC Method | Model | Pagination |
+|--------|----------------|-------|------------|
+| products | search_read | `products` | Offset |
+| customers | search_read | `customers` | Offset |
+| sale_orders | search_read | `sale_orders` | Offset |
+| sale_order_line | search_read | `sale_order_line` | Offset |
+| purchase_orders | search_read | `purchase_orders` | Offset |
+| purchase_order_lines | search_read | `purchase_order_lines` | Offset |
+| stock | search_read | `stock` | Offset |
+| warehouse | search_read | `warehouse` | Offset |
+| location | search_read | `location` | Offset |
+| product_suppliers | search_read | `product_suppliers` | Offset |
+| companies | search_read | `companies` | Offset |
+| users | search_read | `users` | Offset |
+| accounts | search_read | `accounts` | Offset |
+| invoices_bills | search_read | `invoices_bills` | Offset |
+| bom | search_read | `bom` | Offset |
+| bom_lines | search_read | `bom_lines` | Offset |
+| invoice_bill_lines | search_read | `invoice_bill_lines` | Offset |
+| invoice_lines_all | search_read | `invoice_lines_all` | Offset |
+
+### Error Handling
+- 429 → RetriableAPIError
+- Custom ignore_list for problematic fields on schema errors
+
+### Quirks
+- Uses XML-RPC `search_read` method
+- Language config with validation (`xx_XX` format)
+- Configurable `full_sync_streams` to ignore incremental for certain streams
+- Filters: active/inactive products via OR filter
+- Ignores specific fields on error (ignore_list pattern)
+- Schema dynamically fetched via `fields_get`
+
+## ETL Summary
+
+| Attribute | Value |
+|-----------|-------|
+| **Pattern** | Old (most complex - many config flags) |
+| **Entities** | Products, ProductCompositions, Suppliers, SupplierProducts, SellOrders, SellOrderLines, BuyOrders, BuyOrderLines, ReceiptLines |
+
+### Key Config Flags
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `unit_filter` | false | Filter by specific units |
+| `unit_factors` | None | Unit conversion factors |
+| `sell_price_with_taxes` | false | Include tax in sell price |
+| `sync_purchase_price` | true | Sync purchase prices |
+| `average_purchase_price` | false | Use average purchase price |
+| `use_standard_price` | false | Use standard price field |
+| `sync_product_price` | true | Sync product prices |
+| `pullAllOrders` | false | Pull all orders (not just recent) |
+| `map_sellOrdersPOS` | false | Map POS orders as sell orders |
+| `export_buy_orders_as_draft` | false | Export BOs as draft |
+| `bo_completed_on_receipt` | false | Complete BO on receipt |
+| `map_preferred` | false | Map preferred supplier |
+| `sync_deliveryTime` | true | Sync delivery time |
+| `sync_moq` | true | Sync MOQ |
+| `map_lotSizes` | false | Map lot sizes |
+| `prod_min_stock_as_sp_moq` | false | Use min stock as SP MOQ |
+| `sync_minimumStock` | false | Sync minimum stock |
+| `sync_articleCode` | true | Sync article code |
+| `company_ids` | "" | Filter by company IDs |
+| `stocks_company_ids` | company_ids | Company for stocks |
+| `sellorders_company_ids` | company_ids | Company for orders |
+| `buyorders_company_ids` | company_ids | Company for purchase orders |
+| `stocks_warehouse_ids` | "" | Filter by warehouse IDs |
+| `map_stockLevel` | "available_quantity" | Stock level field mapping |
+
+### Custom Logic
+- Uses `sell_price_with_taxes` config to decide if prices include taxes
+- Maps `productCompositions` from Odoo's BoM (Bill of Materials) system
+- Multiple company_ids and warehouse_ids support for multi-company setups
+- Custom stock level mapping (configurable field)
+
+---
+
 ## Links
 - Tap: [tap-odoo](https://gitlab.com/hotglue/tap-odoo)
 - Target: [target-odoo-v3](https://github.com/hotgluexyz/target-odoo-v3)

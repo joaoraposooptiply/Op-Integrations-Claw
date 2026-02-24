@@ -48,6 +48,68 @@ updated: 2026-02-24
 ## Receipt Lines: from GRN (Goods Receipt Notes)
 - quantity=received_quantity, occurred=grn_created_at
 
+## API Reference
+
+### Base URL
+`https://api.easyecom.io`
+
+### Auth Method
+OAuth2 (Bearer token) with email/password + location_key. Token refresh logic: checks expiry (expires_in - 60s buffer), auto-refreshes via POST to `/access/token`. Writes updated token to config file.
+
+### Endpoints
+| Stream | HTTP Method | Path | Pagination |
+|--------|-------------|------|------------|
+| Products | GET | `/Products/GetProductMaster` | Cursor-based (nextUrl), page_size=10 |
+| Suppliers | GET | `/Suppliers` | Cursor-based |
+| ProductCompositions | GET | `/ProductCompositions` | Cursor-based |
+| SellOrders | GET | `/SellOrders` | Cursor-based |
+| BuyOrders | GET | `/BuyOrders` | Cursor-based |
+| Receipts | GET | `/Receipts` | Cursor-based |
+| Returns | GET | `/Returns` | Cursor-based |
+
+### Rate Limiting
+- Strategy: Backoff decorator with `max_tries=10`
+- Backoff config: On `RetriableAPIError`, `ReadTimeout`, `ConnectionError`
+
+### Error Handling
+- Custom `post_process`: handles NA/N/NULL values, converts string numbers to float
+- Graceful "No Data Found" responses
+- Status codes: Standard HTTP + custom exceptions
+
+### Quirks
+- `_write_state_message` override to clear partitions for `gl_entries_dimensions`
+- String-to-float conversion for number fields
+- Cursor-based pagination via `nextUrl` from response
+
+---
+
+## ETL Summary
+
+**Pattern:** OLD
+
+**Entities Processed:**
+- Products (with composition support)
+- Suppliers
+- SupplierProducts
+- SellOrders
+- SellOrderLines
+- BuyOrders
+- BuyOrderLines
+
+**Key Config Flags:**
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `map_supplierProductSku` | true | Map supplier product SKU |
+| `tap_name` | None | Tap name for config backup |
+
+**Custom Logic Highlights:**
+- Product compositions extracted from `products` stream (not dedicated stream)
+- Supplier products also from `products` stream
+- Sell order lines extracted from `sell_orders` with nested `suborders`
+- Buy orders/lines from same `buy_orders` stream
+
+---
+
 ## Links
 - Tap: [tap-easyecom](https://github.com/hotgluexyz/tap-easyecom)
 - Target: [target-easyecom](https://github.com/hotgluexyz/target-easyecom)
